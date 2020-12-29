@@ -12,8 +12,14 @@ services:
 
   prometheus:
     image: prom/prometheus
+    restart: unless-stopped
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/:/etc/prometheus/
+      - prometheus-storage:/prometheus
+
+  pushgateway:
+    image: prom/pushgateway
+    restart: unless-stopped
     environment:
       - VIRTUAL_HOST=prometheus.darkkeks.me
 
@@ -27,3 +33,4 @@ services:
 
 volumes:
   grafana-storage:
+  prometheus-storage:
