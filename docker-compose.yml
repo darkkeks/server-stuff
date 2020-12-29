@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    environment:
+      - VIRTUAL_HOST=grafana.darkkeks.me
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    environment:
+      - VIRTUAL_HOST=prometheus.darkkeks.me
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+volumes:
+  grafana-storage:
