@@ -31,6 +31,35 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
+  host-monitoring:
+    image: prom/node-exporter
+    command:
+      - '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+
+  kks-stat:
+    build:
+      context: ./telegram-bots/
+      dockerfile: ./kks-stat/deploy/Dockerfile
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - VIRTUAL_HOST=kks.darkkeks.me
+
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kks
+      POSTGRES_PASSWORD: root
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-data:/data/postgres
+
 volumes:
   grafana-storage:
   prometheus-storage:
+  postgres-data:
