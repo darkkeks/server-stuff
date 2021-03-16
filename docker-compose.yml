@@ -16,6 +16,9 @@ services:
     volumes:
       - ./prometheus/:/etc/prometheus/
       - prometheus-storage:/prometheus
+    command:
+      - '--storage.tsdb.retention.time=5y'
+      - '--web.enable-lifecycle'
 
   pushgateway:
     image: prom/pushgateway
