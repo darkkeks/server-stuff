@@ -1,0 +1,3 @@
+location = /resume.pdf {
+    root /srv/http/darkkeks.me/;
+}

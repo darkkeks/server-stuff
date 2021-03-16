@@ -30,6 +30,15 @@ services:
       - "80:80"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./vhost.d:/etc/nginx/vhost.d
+      - /srv/http/darkkeks.me:/srv/http/darkkeks.me
+
+  # Пустой контейнер для nginx-proxy, 
+  # пока нету нормального содержимого для домена darkkeks.me
+  dummy-host:
+    build: ./dummy/
+    environment:
+      - VIRTUAL_HOST=darkkeks.me
 
   host-monitoring:
     image: prom/node-exporter
