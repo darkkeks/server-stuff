@@ -1,3 +1,7 @@
 location = /resume.pdf {
     root /srv/http/darkkeks.me/;
 }
+
+location = /hse-bot-token {
+    alias /etc/hse-bot-token;
+}
