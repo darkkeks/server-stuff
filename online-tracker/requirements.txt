@@ -1,0 +1,2 @@
+prometheus-client==0.9.0
+Pyrogram==1.2.9

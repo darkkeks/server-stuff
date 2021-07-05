@@ -9,6 +9,7 @@ services:
       - grafana-storage:/var/lib/grafana
     environment:
       - VIRTUAL_HOST=grafana.darkkeks.me
+      - GF_SERVER_ROOT_URL=https://grafana.darkkeks.me
 
   prometheus:
     image: prom/prometheus
@@ -56,6 +57,24 @@ services:
     restart: unless-stopped
     volumes:
       - '/:/host:ro,rslave'
+
+  user-online:
+    build: ./online-tracker/
+    restart: unless-stopped
+    volumes:
+      - ./online-tracker/config.ini:/app/config.ini
+      - ./online-tracker/darkkeks.session:/app/darkkeks.session
+
+  user-online-filtered:
+    build: ./online-tracker/
+    restart: unless-stopped
+    volumes:
+      - ./online-tracker/config.ini:/app/config.ini
+      - ./online-tracker/filtered.session:/app/filtered.session
+    environment:
+      - UO_WHITELIST=DarkKeks,sabinadayanova
+      - UO_METRIC=user_online_filtered
+      - UO_SESSION=filtered
 
   kks-stat:
     build:
