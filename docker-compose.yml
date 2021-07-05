@@ -24,6 +24,7 @@ services:
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--storage.tsdb.retention.time=5y'
       - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
 
   pushgateway:
     image: prom/pushgateway
@@ -63,18 +64,29 @@ services:
     restart: unless-stopped
     volumes:
       - ./online-tracker/config.ini:/app/config.ini
-      - ./online-tracker/darkkeks.session:/app/darkkeks.session
+      - ./online-tracker/common.session:/app/common.session
 
-  user-online-filtered:
+  user-online-sabina:
     build: ./online-tracker/
     restart: unless-stopped
     volumes:
       - ./online-tracker/config.ini:/app/config.ini
-      - ./online-tracker/filtered.session:/app/filtered.session
+      - ./online-tracker/sabina.session:/app/sabina.session
     environment:
       - UO_WHITELIST=DarkKeks,sabinadayanova
-      - UO_METRIC=user_online_filtered
-      - UO_SESSION=filtered
+      - UO_METRIC=user_online_sabina
+      - UO_SESSION=sabina
+
+  user-online-marshal:
+    build: ./online-tracker/
+    restart: unless-stopped
+    volumes:
+      - ./online-tracker/config.ini:/app/config.ini
+      - ./online-tracker/marshal.session:/app/marshal.session
+    environment:
+      - UO_WHITELIST=DarkKeks,MarshalX
+      - UO_METRIC=user_online_marshal
+      - UO_SESSION=marshal
 
   kks-stat:
     build:

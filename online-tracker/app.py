@@ -12,7 +12,7 @@ from prometheus_client import Gauge, start_http_server
 whitelist_string = os.environ.get('UO_WHITELIST', None)
 whitelist = whitelist_string.split(',') if whitelist_string else None
 metric_name = os.environ.get('UO_METRIC', 'user_online')
-session_name = os.environ.get('UO_SESSION', 'darkkeks')
+session_name = os.environ.get('UO_SESSION', 'common')
 
 app = Client(session_name)
 
