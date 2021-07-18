@@ -93,11 +93,12 @@ services:
       context: ./telegram-bots/
       dockerfile: ./kks-stat/deploy/Dockerfile
     restart: unless-stopped
+    env_file:
+      - ./telegram-bots/.env.kks-stat
     environment:
-      - SPRING_PROFILES_ACTIVE=production
       - VIRTUAL_HOST=kks.darkkeks.me
 
-  postgres:
+  postgres-kks:
     image: postgres:latest
     restart: unless-stopped
     environment:
@@ -105,9 +106,30 @@ services:
       POSTGRES_PASSWORD: root
       PGDATA: /data/postgres
     volumes:
-      - postgres-data:/data/postgres
+      - postgres-data-kks:/data/postgres
+
+  life-stats:
+    build:
+      context: ./telegram-bots/
+      dockerfile: ./life-stats/deploy/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./telegram-bots/.env.life-stats
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+
+  postgres-life:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: lifestats
+      POSTGRES_PASSWORD: root
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-data-life:/data/postgres
 
 volumes:
   grafana-storage:
   prometheus-storage:
-  postgres-data:
+  postgres-data-kks:
+  postgres-data-life:
