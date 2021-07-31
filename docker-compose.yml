@@ -73,7 +73,7 @@ services:
       - ./online-tracker/config.ini:/app/config.ini
       - ./online-tracker/sabina.session:/app/sabina.session
     environment:
-      - UO_WHITELIST=DarkKeks,sabinadayanova
+      - UO_WHITELIST=darkkeks,sabinadayanova
       - UO_METRIC=user_online_sabina
       - UO_SESSION=sabina
 
@@ -84,9 +84,15 @@ services:
       - ./online-tracker/config.ini:/app/config.ini
       - ./online-tracker/marshal.session:/app/marshal.session
     environment:
-      - UO_WHITELIST=DarkKeks,MarshalX
+      - UO_WHITELIST=darkkeks,MarshalX
       - UO_METRIC=user_online_marshal
       - UO_SESSION=marshal
+
+  taxi:
+    build: ./taxi/
+    restart: unless-stopped
+    env_file:
+      - ./taxi/.env
 
   kks-stat:
     build:
