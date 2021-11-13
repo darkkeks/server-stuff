@@ -4,19 +4,27 @@ if [[ -z "$ID" || -z "$COOKIE" ]]; then
 fi
 
 DIRECTION=$1
-if [[ "$DIRECTION" == "to_office" ]]; then
-  ROUTE="
-    [37.22668353105232,55.65968930237797],
-    [37.58763559720322,55.73335408624526]
-  "
-elif [[ "$DIRECTION" == "from_office" ]]; then
-  ROUTE="
-    [37.58763559720322,55.73335408624526],
-    [37.22668353105232,55.65968930237797]
-  "
-else
-  echo "Direction '$DIRECTION' is invalid!"
-fi
+
+case "$DIRECTION" in
+  "to_office")
+    ROUTE="
+      [37.22668353105232,55.65968930237797],
+      [37.58763559720322,55.73335408624526]
+    "
+    ;;
+
+  "from_office")
+    ROUTE="
+      [37.58763559720322,55.73335408624526],
+      [37.22668353105232,55.65968930237797]
+    "
+    ;;
+
+  *)
+    echo "Direction '$DIRECTION' is invalid!"
+    exit 1
+    ;;
+esac
 
 function get_csrf {
   curl -s -X POST \
