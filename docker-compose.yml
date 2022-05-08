@@ -72,7 +72,7 @@ services:
       dockerfile: ./kks-stat/deploy/Dockerfile
     restart: unless-stopped
     env_file:
-      - ./telegram-bots/.env.kks-stat
+      - ./.env.kks-stat
     environment:
       - VIRTUAL_HOST=kks.darkkeks.me
 
