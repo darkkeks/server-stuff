@@ -66,34 +66,6 @@ services:
       - ./online-tracker/config.ini:/app/config.ini
       - ./online-tracker/common.session:/app/common.session
 
-  user-online-sabina:
-    build: ./online-tracker/
-    restart: unless-stopped
-    volumes:
-      - ./online-tracker/config.ini:/app/config.ini
-      - ./online-tracker/sabina.session:/app/sabina.session
-    environment:
-      - UO_WHITELIST=darkkeks,sabinadayanova
-      - UO_METRIC=user_online_sabina
-      - UO_SESSION=sabina
-
-  user-online-marshal:
-    build: ./online-tracker/
-    restart: unless-stopped
-    volumes:
-      - ./online-tracker/config.ini:/app/config.ini
-      - ./online-tracker/marshal.session:/app/marshal.session
-    environment:
-      - UO_WHITELIST=darkkeks,MarshalX
-      - UO_METRIC=user_online_marshal
-      - UO_SESSION=marshal
-
-  taxi:
-    build: ./taxi/
-    restart: unless-stopped
-    env_file:
-      - ./taxi/.env
-
   kks-stat:
     build:
       context: ./telegram-bots/
@@ -114,28 +86,7 @@ services:
     volumes:
       - postgres-data-kks:/data/postgres
 
-  life-stats:
-    build:
-      context: ./telegram-bots/
-      dockerfile: ./life-stats/deploy/Dockerfile
-    restart: unless-stopped
-    env_file:
-      - ./telegram-bots/.env.life-stats
-    environment:
-      - SPRING_PROFILES_ACTIVE=production
-
-  postgres-life:
-    image: postgres:latest
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: lifestats
-      POSTGRES_PASSWORD: root
-      PGDATA: /data/postgres
-    volumes:
-      - postgres-data-life:/data/postgres
-
 volumes:
   grafana-storage:
   prometheus-storage:
   postgres-data-kks:
-  postgres-data-life:
