@@ -86,6 +86,23 @@ services:
     volumes:
       - postgres-data-kks:/data/postgres
 
+  postgres-kks-backup:
+    build: ./backup/postgres-backup
+    depends_on:
+      - postgres-kks
+    links:
+      - postgres-kks
+    environment:
+      SCHEDULE: '@weekly'
+      S3_BUCKET: darkkeks-backups
+      S3_PREFIX: postgres-kks
+      POSTGRES_HOST: postgres-kks
+      POSTGRES_DATABASE: kks
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    env_file:
+      - ./.env.s3
+
 volumes:
   grafana-storage:
   prometheus-storage:
