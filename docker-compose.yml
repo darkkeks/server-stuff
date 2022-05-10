@@ -66,6 +66,8 @@ services:
       - ./online-tracker/config.ini:/app/config.ini
       - ./online-tracker/common.session:/app/common.session
 
+  # kks-stat
+
   kks-stat:
     build:
       context: ./telegram-bots/
@@ -88,10 +90,7 @@ services:
 
   postgres-kks-backup:
     build: ./backup/postgres-backup
-    depends_on:
-      - postgres-kks
-    links:
-      - postgres-kks
+    restart: unless-stopped
     environment:
       SCHEDULE: '@weekly'
       S3_BUCKET: darkkeks-backups
@@ -103,7 +102,36 @@ services:
     env_file:
       - ./.env.s3
 
+  # hse-remind
+
+  hse-remind:
+    build:
+      context: ./telegram-bots/
+      dockerfile: ./hse-remind/deploy/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./.env.hse-remind
+
+  mongo-hse-remind:
+    image: mongo:latest
+    restart: unless-stopped
+    volumes:
+      - mongo-data-hse-remind:/data/db
+
+  mongo-hse-remind-backup:
+    build: ./backup/mongo-backup
+    restart: unless-stopped
+    environment:
+      SCHEDULE: '@daily'
+      S3_BUCKET: darkkeks-backups
+      S3_PREFIX: mongo-hse-remind
+      MONGO_HOST: mongo-hse-remind
+      MONGO_DATABASE: test
+    env_file:
+      - ./.env.s3
+
 volumes:
   grafana-storage:
   prometheus-storage:
   postgres-data-kks:
+  mongo-data-hse-remind:
