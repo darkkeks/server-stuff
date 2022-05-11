@@ -1,3 +1,6 @@
 [submodule "telegram-bots"]
 	path = telegram-bots
 	url = git@github.com:darkkeks/telegram-bots.git
+[submodule "VCoinGame"]
+	path = VCoinGame
+	url = git@github.com:darkkeks/VCoinGame.git

@@ -136,8 +136,41 @@ services:
     env_file:
       - ./.env.s3
 
+  # vcoin
+
+  vcoin-hangman:
+    build: ./VCoinGame/
+    restart: unless-stopped
+    env_file:
+      - ./.env.vcoin
+
+  postgres-vcoin:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: vcoin
+      POSTGRES_PASSWORD: root
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-data-vcoin:/data/postgres
+
+  postgres-vcoin-backup:
+    build: ./backup/postgres-backup
+    restart: unless-stopped
+    environment:
+      SCHEDULE: '@daily'
+      S3_BUCKET: darkkeks-backups
+      S3_PREFIX: postgres-vcoin
+      POSTGRES_HOST: postgres-vcoin
+      POSTGRES_DATABASE: vcoin
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    env_file:
+      - ./.env.s3
+
 volumes:
   grafana-storage:
   prometheus-storage:
   postgres-data-kks:
   mongo-data-hse-remind:
+  postgres-data-vcoin:
