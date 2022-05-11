@@ -22,7 +22,7 @@ services:
     environment:
       - VIRTUAL_HOST=darkkeks.me
 
-  # metrics
+  # grafana
 
   grafana:
     image: grafana/grafana:latest
@@ -32,6 +32,20 @@ services:
     environment:
       - VIRTUAL_HOST=grafana.darkkeks.me
       - GF_SERVER_ROOT_URL=https://grafana.darkkeks.me
+
+  grafana-backup:
+    build: ./backup/grafana-backup
+    restart: unless-stopped
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    environment:
+      SCHEDULE: '@daily'
+      S3_BUCKET: darkkeks-backups
+      S3_PREFIX: grafana
+    env_file:
+      - ./.env.s3
+
+  # prometheus
 
   prometheus:
     image: prom/prometheus
