@@ -183,9 +183,23 @@ services:
     env_file:
       - ./.env.s3
 
+  # openvpn
+
+  openvpn-server:
+    image: kylemanna/openvpn
+    restart: unless-stopped
+    ports:
+      - "1194:1194/udp"
+    cap_add:
+      - NET_ADMIN
+    volumes:
+     - server-stuff_openvpn-data:/etc/openvpn
+
 volumes:
   grafana-storage:
   prometheus-storage:
   postgres-data-kks:
   mongo-data-hse-remind:
   postgres-data-vcoin:
+  server-stuff_openvpn-data:
+    external: true
