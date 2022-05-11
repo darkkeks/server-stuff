@@ -19,6 +19,7 @@ services:
   # пока нету нормального содержимого для домена darkkeks.me
   dummy-host:
     build: ./dummy/
+    restart: unless-stopped
     environment:
       - VIRTUAL_HOST=darkkeks.me
 
