@@ -90,9 +90,10 @@ services:
   # kks-stat
 
   kks-stat:
-    build:
-      context: ./telegram-bots/
-      dockerfile: ./kks-stat/deploy/Dockerfile
+    # build:
+    #   context: ./telegram-bots/
+    #   dockerfile: ./kks-stat/deploy/Dockerfile
+    image: fa9e2e0a75bb
     restart: unless-stopped
     env_file:
       - ./.env.kks-stat
@@ -126,9 +127,10 @@ services:
   # hse-remind
 
   hse-remind:
-    build:
-      context: ./telegram-bots/
-      dockerfile: ./hse-remind/deploy/Dockerfile
+    # build:
+    #   context: ./telegram-bots/
+    #   dockerfile: ./hse-remind/deploy/Dockerfile
+    image: 4d7fe21a9467
     restart: unless-stopped
     env_file:
       - ./.env.hse-remind
