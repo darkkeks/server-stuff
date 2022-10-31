@@ -14,6 +14,7 @@ services:
       - ./vhost.d:/etc/nginx/vhost.d
       - /srv/http/darkkeks.me:/srv/http/darkkeks.me
       - /etc/hse-bot-token:/etc/hse-bot-token
+      - static-paste:/srv/http/paste.darkkeks.me/staticfiles
 
   # Пустой контейнер для nginx-proxy,
   # пока нету нормального содержимого для домена darkkeks.me
@@ -197,6 +198,47 @@ services:
     volumes:
      - server-stuff_openvpn-data:/etc/openvpn
 
+  # paste.darkkeks.me
+
+  paste:
+    build: ./CodepasteDjango
+    restart: unless-stopped
+    env_file: ./.env.paste
+    environment:
+      - DOMAIN=paste.darkkeks.me
+      - POSTGRES_HOST=postgres-paste
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=paste
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - VIRTUAL_HOST=paste.darkkeks.me
+    volumes:
+      - static-paste:/app/staticfiles
+
+  postgres-paste:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: paste
+      POSTGRES_PASSWORD: root
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-data-paste:/data/postgres
+
+  postgres-paste-backup:
+    build: ./backup/postgres-backup
+    restart: unless-stopped
+    environment:
+      SCHEDULE: '@daily'
+      S3_BUCKET: darkkeks-backups
+      S3_PREFIX: postgres-paste
+      POSTGRES_HOST: postgres-paste
+      POSTGRES_DATABASE: paste
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    env_file:
+      - ./.env.s3
+
 volumes:
   grafana-storage:
   prometheus-storage:
@@ -205,3 +247,5 @@ volumes:
   postgres-data-vcoin:
   server-stuff_openvpn-data:
     external: true
+  postgres-data-paste:
+  static-paste:

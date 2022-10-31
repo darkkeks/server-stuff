@@ -4,3 +4,6 @@
 [submodule "VCoinGame"]
 	path = VCoinGame
 	url = git@github.com:darkkeks/VCoinGame.git
+[submodule "CodepasteDjango"]
+	path = CodepasteDjango
+	url = git@github.com:codepaste-ml/CodepasteDjango.git

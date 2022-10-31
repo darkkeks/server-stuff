@@ -1,0 +1,3 @@
+location /static/ {
+    alias /srv/http/paste.darkkeks.me/staticfiles/;
+}
