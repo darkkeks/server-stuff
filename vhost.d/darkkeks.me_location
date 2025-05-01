@@ -1,4 +1,4 @@
-location = /resume.pdf {
+location / {
     root /srv/http/darkkeks.me/;
 }
 

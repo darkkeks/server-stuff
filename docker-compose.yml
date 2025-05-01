@@ -91,10 +91,9 @@ services:
   # kks-stat
 
   kks-stat:
-    # build:
-    #   context: ./telegram-bots/
-    #   dockerfile: ./kks-stat/deploy/Dockerfile
-    image: fa9e2e0a75bb
+    build:
+      context: ./telegram-bots/
+      dockerfile: ./kks-stat/deploy/Dockerfile
     restart: unless-stopped
     env_file:
       - ./.env.kks-stat
