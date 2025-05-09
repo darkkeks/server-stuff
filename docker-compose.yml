@@ -27,13 +27,15 @@ services:
   # grafana
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:12.0.0
     restart: unless-stopped
     volumes:
       - grafana-storage:/var/lib/grafana
     environment:
       - VIRTUAL_HOST=grafana.darkkeks.me
       - GF_SERVER_ROOT_URL=https://grafana.darkkeks.me
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_NAME=Anonymous
 
   grafana-backup:
     build: ./backup/grafana-backup
