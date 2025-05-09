@@ -1,0 +1,8 @@
+{
+  "policies": {
+    "SanitizeOnShutdown": false,
+    "Homepage": {
+      "StartPage": "previous-session"
+    }
+  }
+}

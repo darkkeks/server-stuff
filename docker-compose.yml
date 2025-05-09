@@ -238,6 +238,32 @@ services:
     env_file:
       - ./.env.s3
 
+  # neko
+
+  neko:
+    image: "ghcr.io/m1k1o/neko/firefox:latest"
+    restart: "unless-stopped"
+    shm_size: "2gb"
+    expose:
+      - 8080
+    ports:
+      - "52000-52100:52000-52100/udp"
+    env_file:
+      - ./.env.neko
+    volumes:
+      - neko-profile:/home/neko/.mozilla/firefox/profile.default
+      - ./neko/policies.json:/usr/lib/firefox/distribution/policies.json
+    environment:
+      VIRTUAL_HOST: watch.darkkeks.me
+      VIRTUAL_PORT: 8080
+      NEKO_SERVER_METRICS: true
+      NEKO_SERVER_PROXY: true
+      NEKO_DESKTOP_SCREEN: 1920x1080@60
+      NEKO_WEBRTC_EPR: 52000-52100
+      NEKO_WEBRTC_ICELITE: true
+      # Sessions disconnect after 60s behind nginx and increasing timeout in nginx didn't help.
+      NEKO_SESSION_HEARTBEAT_INTERVAL: 10
+
 volumes:
   grafana-storage:
   prometheus-storage:
@@ -248,3 +274,4 @@ volumes:
     external: true
   postgres-data-paste:
   static-paste:
+  neko-profile:

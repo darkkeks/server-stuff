@@ -21,7 +21,6 @@ scrape_configs:
     static_configs:
     - targets: ['host-monitoring:9100']
 
-  - job_name: 'user_online'
-    scrape_interval: 1s
+  - job_name: 'neko'
     static_configs:
-    - targets: ['user-online:9101']
+    - targets: ['neko:8080']
