@@ -12,18 +12,9 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./vhost.d:/etc/nginx/vhost.d
+      - ./darkkeks.me:/srv/http/darkkeks.me:ro
       - /etc/hse-bot-token:/etc/hse-bot-token
       - static-paste:/srv/http/paste.darkkeks.me/staticfiles
-
-  # darkkeks.me
-
-  darkkeks-web:
-    image: nginx:alpine
-    restart: unless-stopped
-    volumes:
-      - ./darkkeks.me:/usr/share/nginx/html:ro
-    environment:
-      - VIRTUAL_HOST=darkkeks.me
 
   # grafana
 
