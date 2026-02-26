@@ -12,17 +12,9 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - ./vhost.d:/etc/nginx/vhost.d
-      - /srv/http/darkkeks.me:/srv/http/darkkeks.me
+      - ./darkkeks.me:/srv/http/darkkeks.me
       - /etc/hse-bot-token:/etc/hse-bot-token
       - static-paste:/srv/http/paste.darkkeks.me/staticfiles
-
-  # Пустой контейнер для nginx-proxy,
-  # пока нету нормального содержимого для домена darkkeks.me
-  dummy-host:
-    build: ./dummy/
-    restart: unless-stopped
-    environment:
-      - VIRTUAL_HOST=darkkeks.me
 
   # grafana
 
