@@ -1,6 +1,5 @@
 location / {
-    root /srv/http/darkkeks.me/;
-    try_files $uri $uri/ =404;
+    root /srv/http/darkkeks.me;
 }
 
 location = /hse-bot-token {
