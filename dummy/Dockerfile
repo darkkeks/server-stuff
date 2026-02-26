@@ -1,3 +1,5 @@
-FROM alpine:latest
+FROM nginx:alpine
 EXPOSE 80
-CMD ["sh", "-c", "while sleep 3600; do :; done"]
+COPY darkkeks.me /usr/share/nginx/html
+RUN echo 'server { listen 80; root /usr/share/nginx/html; index index.html index.htm; location / { try_files $uri $uri/ =404; } }' > /etc/nginx/conf.d/default.conf
+CMD ["nginx", "-g", "daemon off;"]
