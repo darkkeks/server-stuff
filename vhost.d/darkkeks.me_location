@@ -1,5 +1,5 @@
 location / {
-    root /srv/http/darkkeks.me/;
+    root /opt/server-stuff/;
 }
 
 location = /hse-bot-token {
