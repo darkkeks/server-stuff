@@ -1,7 +1,4 @@
-version: "3.9"
-
 services:
-
   # nginx
 
   nginx-proxy:
@@ -265,6 +262,95 @@ services:
       NEKO_WEBRTC_ICELITE: true
       # Sessions disconnect after 60s behind nginx and increasing timeout in nginx didn't help.
       NEKO_SESSION_HEARTBEAT_INTERVAL: 10
+      NEKO_SESSION_IMPLICIT_HOSTING: true
+
+  neko2:
+    image: "ghcr.io/m1k1o/neko/chromium:latest"
+    restart: "unless-stopped"
+    shm_size: "2gb"
+    expose:
+      - 8080
+    ports:
+      - "53000-53100:53000-53100/udp"
+    env_file:
+      - ./.env.neko
+    cap_add:
+      - SYS_ADMIN
+    # volumes:
+    #   - neko-profile:/home/neko/.mozilla/firefox/profile.default
+    #   - ./neko/policies.json:/usr/lib/firefox/distribution/policies.json
+    environment:
+      VIRTUAL_HOST: watch2.darkkeks.me
+      VIRTUAL_PORT: 8080
+      NEKO_SERVER_METRICS: true
+      NEKO_SERVER_PROXY: true
+      NEKO_DESKTOP_SCREEN: 1920x1080@60
+      NEKO_WEBRTC_EPR: 53000-53100
+      NEKO_WEBRTC_ICELITE: true
+      # Sessions disconnect after 60s behind nginx and increasing timeout in nginx didn't help.
+      NEKO_SESSION_HEARTBEAT_INTERVAL: 10
+      NEKO_SESSION_IMPLICIT_HOSTING: true
+
+  hotpot:
+    image: "ghcr.io/erik/hotpot"
+    restart: "unless-stopped"
+    environment:
+      VIRTUAL_HOST: hotpot.darkkeks.me
+      STRAVA_CLIENT_ID: 193063
+      STRAVA_CLIENT_SECRET: 78520f0b28f9c90a2fae7eae7dc19227fbf6b875
+      STRAVA_WEBHOOK_SECRET: odFRu2zrCTuLSSfniXIVP50h8M8HYDHV
+    command: --db /data/hotpot.sqlite3 serve --host 0.0.0.0 --strava-webhook
+    volumes:
+      - ./hotpot:/data
+
+  firefly-redis:
+    image: redis:alpine
+    restart: unless-stopped
+
+  firefly:
+    image: fireflyiii/core:latest
+    restart: unless-stopped
+    volumes:
+      - firefly_iii_upload:/var/www/html/storage/upload
+    env_file: .env.firefly
+    environment:
+      VIRTUAL_HOST: ff.darkkeks.me
+      VIRTUAL_PORT: 8080
+    depends_on:
+      - firefly-db
+      - firefly-redis
+
+  firefly-importer:
+    image: fireflyiii/data-importer:latest
+    restart: unless-stopped
+    env_file: .env.firefly
+    environment:
+      VIRTUAL_HOST: ff-importer.darkkeks.me
+      VIRTUAL_PORT: 8080
+    depends_on:
+      - firefly
+
+  firefly-db:
+    image: mariadb:lts
+    hostname: firefly-mongo
+    container_name: firefly_iii_db
+    restart: unless-stopped
+    env_file: .env.firefly
+    volumes:
+      - firefly_iii_db:/var/lib/mysql
+
+  firefly-cron:
+    image: alpine
+    restart: unless-stopped
+    container_name: firefly_iii_cron
+    env_file: .env.firefly
+    command: ["sh", "-c", "apk add tzdata && \
+      (ln -s /usr/share/zoneinfo/$$TZ /etc/localtime || true) && \
+      echo \"0 3 * * * wget -qO- http://app:8080/api/v1/cron/$$STATIC_CRON_TOKEN;echo\" \
+      | crontab - && \
+      crond -f -L /dev/stdout"]
+    depends_on:
+      - firefly
 
 volumes:
   grafana-storage:
@@ -277,3 +363,5 @@ volumes:
   postgres-data-paste:
   static-paste:
   neko-profile:
+  firefly_iii_upload:
+  firefly_iii_db:
